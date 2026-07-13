@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+.env
+.wrangler
+.codex-dev.*.log
+npm-debug.log
