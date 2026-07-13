@@ -1,32 +1,20 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  Blocks,
-  Bot,
   CalendarDays,
-  Check,
-  ChevronRight,
-  CloudCog,
-  Code2,
-  Compass,
-  Cpu,
-  Database,
   ExternalLink,
-  Gauge,
-  Globe2,
-  HeartHandshake,
-  Layers3,
-  LifeBuoy,
   Mail,
-  MessageCircle,
-  Network,
-  Route,
-  SearchCheck,
-  ServerCog,
-  ShieldCheck,
-  Sparkles,
-  Workflow,
 } from "lucide-react";
+import {
+  siDocker,
+  siN8n,
+  siNextdotjs,
+  siNodedotjs,
+  siPostgresql,
+  siReact,
+  siWhatsapp,
+} from "simple-icons/icons";
+import { BrandIcon } from "./BrandIcon";
 import { ContactForm } from "./ContactForm";
 import { SiteShell } from "./SiteShell";
 import {
@@ -40,15 +28,6 @@ import {
   type Locale,
   whatsappHref,
 } from "../lib/site";
-
-const serviceIcons = {
-  web: Globe2,
-  software: Code2,
-  automation: Bot,
-  crm: Network,
-  infrastructure: ServerCog,
-  consulting: Compass,
-};
 
 const methodology = {
   es: [
@@ -70,21 +49,21 @@ const methodology = {
 } as const;
 
 const technologies = [
-  ["Next.js", Layers3],
-  ["React", Blocks],
-  ["Node.js", Cpu],
-  ["n8n", Workflow],
-  ["Docker", CloudCog],
-  ["PostgreSQL", Database],
-  ["APIs", Network],
-  ["Cloud / VPS", ServerCog],
+  { name: "Next.js", icon: siNextdotjs, color: "#ffffff" },
+  { name: "React", icon: siReact },
+  { name: "Node.js", icon: siNodedotjs },
+  { name: "n8n", icon: siN8n },
+  { name: "Docker", icon: siDocker },
+  { name: "PostgreSQL", icon: siPostgresql },
+  { name: "APIs" },
+  { name: "Cloud / VPS" },
 ] as const;
 
 function Breadcrumbs({ locale, current }: { locale: Locale; current: string }) {
   return (
     <nav className="breadcrumbs" aria-label={locale === "es" ? "Migas de pan" : "Breadcrumbs"}>
       <Link href={paths[locale].home}>{locale === "es" ? "Inicio" : "Home"}</Link>
-      <ChevronRight size={14} />
+      <span aria-hidden="true">/</span>
       <span aria-current="page">{current}</span>
     </nav>
   );
@@ -167,10 +146,8 @@ function CTASection({ locale }: { locale: Locale }) {
 
 function ServiceCard({ service, locale, compact = false }: { service: (typeof services)[number]; locale: Locale; compact?: boolean }) {
   const content = service[locale];
-  const Icon = serviceIcons[service.id];
   return (
     <article className={`service-card ${compact ? "service-card-compact" : ""}`} data-service={service.id}>
-      <div className="service-icon"><Icon size={23} /></div>
       <div>
         <span className="service-index">{String(services.indexOf(service) + 1).padStart(2, "0")}</span>
         <h3>{content.title}</h3>
@@ -183,7 +160,7 @@ function ServiceCard({ service, locale, compact = false }: { service: (typeof se
             <p>{content.problem}</p>
           </div>
           <ul className="check-list">
-            {content.deliverables.map((item) => <li key={item}><Check size={15} />{item}</li>)}
+            {content.deliverables.map((item) => <li key={item}>{item}</li>)}
           </ul>
           <p className="service-clients"><strong>{locale === "es" ? "Para:" : "For:"}</strong> {content.clients}</p>
         </>
@@ -263,13 +240,8 @@ export function HomePage({ locale }: { locale: Locale }) {
               </Link>
             </div>
             <a className="hero-whatsapp" href={whatsappHref(locale)} target="_blank" rel="noreferrer" data-event="whatsapp_click" data-placement="hero">
-              <MessageCircle size={17} />{labels[locale].whatsapp}<ExternalLink size={14} />
+              <BrandIcon icon={siWhatsapp} size={17} color="#25D366" />{labels[locale].whatsapp}
             </a>
-          </div>
-          <div className="hero-rail" aria-label={es ? "Áreas de trabajo" : "Areas of work"}>
-            <div><Code2 size={18} /><span>{es ? "Desarrollo" : "Development"}</span></div>
-            <div><Workflow size={18} /><span>{es ? "Automatización" : "Automation"}</span></div>
-            <div><ServerCog size={18} /><span>{es ? "Infraestructura" : "Infrastructure"}</span></div>
           </div>
         </div>
       </section>
@@ -278,7 +250,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         <div className="container trust-inner">
           <span>{es ? "Negocios que ya confían en DreamWeb" : "Businesses that trust DreamWeb"}</span>
           <div className="client-wordmarks"><strong>BKids</strong><strong>1Percentil</strong></div>
-          <span className="trust-note"><ShieldCheck size={16} />{es ? "Casos reales y verificables" : "Real, verifiable work"}</span>
+          <span className="trust-note">{es ? "Casos reales y verificables" : "Real, verifiable work"}</span>
         </div>
       </section>
 
@@ -317,7 +289,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <section className="section technology-section">
         <div className="container technology-layout">
           <div className="technology-copy"><span className="eyebrow">{es ? "Tecnologías" : "Technologies"}</span><h2>{es ? "Elegimos herramientas por su utilidad, no por moda." : "We choose tools for their value, not their hype."}</h2><p>{es ? "Combinamos desarrollo, automatización e infraestructura para construir soluciones mantenibles y preparadas para evolucionar." : "We combine development, automation and infrastructure to build maintainable solutions ready to evolve."}</p></div>
-          <div className="technology-grid">{technologies.map(([name, Icon]) => <div key={name}><Icon size={20} /><span>{name}</span></div>)}</div>
+          <div className="technology-grid">{technologies.map((technology) => <div key={technology.name}>{"icon" in technology && technology.icon && <BrandIcon icon={technology.icon} size={21} color={"color" in technology ? technology.color : undefined} />}<span>{technology.name}</span></div>)}</div>
         </div>
       </section>
 
@@ -342,9 +314,9 @@ export function ServicesPage({ locale }: { locale: Locale }) {
       </section>
       <section className="section service-principles">
         <div className="container principle-grid">
-          <div><SearchCheck size={24} /><h3>{es ? "Diagnóstico antes de construir" : "Diagnose before building"}</h3><p>{es ? "Evaluamos el problema y el contexto antes de definir herramientas." : "We assess the problem and context before selecting tools."}</p></div>
-          <div><Route size={24} /><h3>{es ? "Alcance visible" : "Visible scope"}</h3><p>{es ? "Etapas, decisiones y responsabilidades claras desde el inicio." : "Clear stages, decisions and responsibilities from the start."}</p></div>
-          <div><LifeBuoy size={24} /><h3>{es ? "Continuidad real" : "Real continuity"}</h3><p>{es ? "Podemos acompañar el despliegue, soporte y evolución posterior." : "We can support deployment, operation and future evolution."}</p></div>
+          <div><span>01</span><h3>{es ? "Diagnóstico antes de construir" : "Diagnose before building"}</h3><p>{es ? "Evaluamos el problema y el contexto antes de definir herramientas." : "We assess the problem and context before selecting tools."}</p></div>
+          <div><span>02</span><h3>{es ? "Alcance visible" : "Visible scope"}</h3><p>{es ? "Etapas, decisiones y responsabilidades claras desde el inicio." : "Clear stages, decisions and responsibilities from the start."}</p></div>
+          <div><span>03</span><h3>{es ? "Continuidad real" : "Real continuity"}</h3><p>{es ? "Podemos acompañar el despliegue, soporte y evolución posterior." : "We can support deployment, operation and future evolution."}</p></div>
         </div>
       </section>
       <CTASection locale={locale} />
@@ -358,7 +330,7 @@ export function ProjectsPage({ locale }: { locale: Locale }) {
     <SiteShell locale={locale}>
       <InternalHero locale={locale} eyebrow={es ? "Proyectos" : "Projects"} title={es ? "Experiencia demostrada con problemas reales." : "Experience demonstrated through real problems."} description={es ? "Casos publicables y verificables. Compartimos el contexto, la solución implementada y los resultados sin revelar información privada." : "Verifiable, approved work. We share context, implementation and outcomes without exposing private information."} stat={[String(projects.filter((project) => project.published).length).padStart(2, "0"), es ? "casos publicados" : "published cases"]} />
       <section className="section projects-page-section"><div className="container projects-grid">{projects.filter((project) => project.published).map((project) => <ProjectCard key={project.slug} project={project} locale={locale} />)}</div></section>
-      <section className="section outcome-band"><div className="container outcome-grid"><div><Gauge size={24} /><h3>{es ? "Resultados responsables" : "Responsible outcomes"}</h3><p>{es ? "No publicamos métricas que no estén validadas por el cliente." : "We do not publish metrics that have not been validated by the client."}</p></div><div><ShieldCheck size={24} /><h3>{es ? "Información cuidada" : "Protected information"}</h3><p>{es ? "Precios, accesos e información operativa permanecen privados." : "Pricing, access and operational information remain private."}</p></div><div><HeartHandshake size={24} /><h3>{es ? "Acompañamiento" : "Ongoing partnership"}</h3><p>{es ? "La entrega es una etapa, no el final de la relación técnica." : "Delivery is a stage, not the end of the technical relationship."}</p></div></div></section>
+      <section className="section outcome-band"><div className="container outcome-grid"><div><span>01</span><h3>{es ? "Resultados responsables" : "Responsible outcomes"}</h3><p>{es ? "No publicamos métricas que no estén validadas por el cliente." : "We do not publish metrics that have not been validated by the client."}</p></div><div><span>02</span><h3>{es ? "Información cuidada" : "Protected information"}</h3><p>{es ? "Precios, accesos e información operativa permanecen privados." : "Pricing, access and operational information remain private."}</p></div><div><span>03</span><h3>{es ? "Acompañamiento" : "Ongoing partnership"}</h3><p>{es ? "La entrega es una etapa, no el final de la relación técnica." : "Delivery is a stage, not the end of the technical relationship."}</p></div></div></section>
       <CTASection locale={locale} />
     </SiteShell>
   );
@@ -392,7 +364,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
     <SiteShell locale={locale}>
       <InternalHero locale={locale} eyebrow="DreamWeb" title={es ? "Tecnología cercana, implementada con rigor." : "Approachable technology, implemented with rigor."} description={es ? "Somos una marca chilena de soluciones digitales enfocada en transformar necesidades de negocio en herramientas concretas, funcionales y mantenibles." : "We are a Chilean digital solutions brand focused on turning business needs into concrete, functional and maintainable tools."} stat={["360°", es ? "acompañamiento integral" : "end-to-end support"]} />
       <section className="section about-intro"><div className="container about-grid"><div className="about-statement"><span className="eyebrow">{es ? "Nuestra forma de trabajar" : "Our way of working"}</span><h2>{es ? "La claridad técnica también es parte del servicio." : "Technical clarity is part of the service."}</h2></div><div className="about-copy"><p>{es ? "Trabajamos de forma cercana durante todo el proceso: desde el levantamiento inicial y la definición de la solución hasta su implementación, capacitación y soporte." : "We work closely throughout the process: from initial discovery and solution definition to implementation, training and support."}</p><p>{es ? "DreamWeb está construida para crecer como una marca independiente, capaz de acompañar a negocios, empresas y agencias en proyectos de distinta escala." : "DreamWeb is built to grow as an independent brand, able to support businesses, companies and agencies across projects of different scales."}</p></div></div></section>
-      <section className="section values-section"><div className="container values-grid"><div><HeartHandshake size={25} /><span>01</span><h3>{es ? "Cercanía" : "Closeness"}</h3><p>{es ? "Comunicación directa, contexto compartido y decisiones entendibles." : "Direct communication, shared context and understandable decisions."}</p></div><div><SearchCheck size={25} /><span>02</span><h3>{es ? "Claridad" : "Clarity"}</h3><p>{es ? "Explicamos alternativas, riesgos y límites antes de implementar." : "We explain alternatives, risks and limits before implementation."}</p></div><div><ShieldCheck size={25} /><span>03</span><h3>{es ? "Responsabilidad" : "Responsibility"}</h3><p>{es ? "Construimos soluciones mantenibles y evitamos promesas absolutas." : "We build maintainable solutions and avoid absolute promises."}</p></div><div><Sparkles size={25} /><span>04</span><h3>{es ? "Evolución" : "Evolution"}</h3><p>{es ? "Diseñamos una base que pueda aprender, crecer y adaptarse." : "We design foundations that can learn, grow and adapt."}</p></div></div></section>
+      <section className="section values-section"><div className="container values-grid"><div><span>01</span><h3>{es ? "Cercanía" : "Closeness"}</h3><p>{es ? "Comunicación directa, contexto compartido y decisiones entendibles." : "Direct communication, shared context and understandable decisions."}</p></div><div><span>02</span><h3>{es ? "Claridad" : "Clarity"}</h3><p>{es ? "Explicamos alternativas, riesgos y límites antes de implementar." : "We explain alternatives, risks and limits before implementation."}</p></div><div><span>03</span><h3>{es ? "Responsabilidad" : "Responsibility"}</h3><p>{es ? "Construimos soluciones mantenibles y evitamos promesas absolutas." : "We build maintainable solutions and avoid absolute promises."}</p></div><div><span>04</span><h3>{es ? "Evolución" : "Evolution"}</h3><p>{es ? "Diseñamos una base que pueda aprender, crecer y adaptarse." : "We design foundations that can learn, grow and adapt."}</p></div></div></section>
       <section className="section about-method"><div className="container"><div className="section-heading split-heading"><div><span className="eyebrow">{es ? "Metodología" : "Methodology"}</span><h2>{es ? "Un proceso completo, sin zonas grises." : "A complete process without gray areas."}</h2></div><p>{es ? "Cada etapa deja decisiones, entregables y próximos pasos claros." : "Every stage leaves clear decisions, deliverables and next steps."}</p></div><Methodology locale={locale} /></div></section>
       <CTASection locale={locale} />
     </SiteShell>
@@ -405,7 +377,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
   return (
     <SiteShell locale={locale}>
       <InternalHero locale={locale} eyebrow={es ? "Contacto" : "Contact"} title={es ? "Hablemos de lo que tu negocio necesita resolver." : "Let’s talk about what your business needs to solve."} description={es ? "Elige el canal que te resulte más cómodo. Para evaluar un proyecto, una reunión o el formulario nos entregan el contexto necesario." : "Choose the channel that works best for you. A meeting or the form gives us the context needed to assess your project."} />
-      <section className="section contact-section"><div className="container contact-layout"><div className="contact-sidebar"><div className="contact-method" id="agenda"><CalendarDays size={23} /><span className="eyebrow">{es ? "Reunión de 60 minutos" : "60-minute meeting"}</span><h2>{es ? "Revisemos tu proyecto en contexto." : "Let’s review your project in context."}</h2><p>{es ? "La disponibilidad se gestiona en Google Calendar y utiliza America/Santiago como zona horaria principal." : "Availability is managed through Google Calendar, using America/Santiago as the primary time zone."}</p><a className="button button-primary" href={bookingHref} target={bookingUrl ? "_blank" : undefined} rel={bookingUrl ? "noreferrer" : undefined} data-event="booking_cta_click" data-placement="contact"><CalendarDays size={18} />{bookingUrl ? labels[locale].booking : es ? "Solicitar una hora" : "Request a time"}</a><small>{es ? "Alternativas disponibles: formulario y WhatsApp." : "Alternative channels: form and WhatsApp."}</small></div><div className="direct-contact"><a href={whatsappHref(locale)} target="_blank" rel="noreferrer" data-event="whatsapp_click" data-placement="contact"><MessageCircle size={20} /><span><strong>WhatsApp</strong><small>+56 9 9440 2632</small></span><ArrowRight size={17} /></a><a href={`mailto:${contactEmail}`}><Mail size={20} /><span><strong>Email</strong><small>{contactEmail}</small></span><ArrowRight size={17} /></a></div><p className="response-note"><span className="signal-dot" />{labels[locale].response}</p></div><ContactForm locale={locale} /></div></section>
+      <section className="section contact-section"><div className="container contact-layout"><div className="contact-sidebar"><div className="contact-method" id="agenda"><span className="eyebrow">{es ? "Reunión de 60 minutos" : "60-minute meeting"}</span><h2>{es ? "Revisemos tu proyecto en contexto." : "Let’s review your project in context."}</h2><p>{es ? "La disponibilidad se gestiona en Google Calendar y utiliza America/Santiago como zona horaria principal." : "Availability is managed through Google Calendar, using America/Santiago as the primary time zone."}</p><a className="button button-primary" href={bookingHref} target={bookingUrl ? "_blank" : undefined} rel={bookingUrl ? "noreferrer" : undefined} data-event="booking_cta_click" data-placement="contact"><CalendarDays size={18} />{bookingUrl ? labels[locale].booking : es ? "Solicitar una hora" : "Request a time"}</a><small>{es ? "Alternativas disponibles: formulario y WhatsApp." : "Alternative channels: form and WhatsApp."}</small></div><div className="direct-contact"><a href={whatsappHref(locale)} target="_blank" rel="noreferrer" data-event="whatsapp_click" data-placement="contact"><BrandIcon icon={siWhatsapp} size={20} /><span><strong>WhatsApp</strong><small>+56 9 9440 2632</small></span></a><a href={`mailto:${contactEmail}`}><Mail size={20} /><span><strong>Email</strong><small>{contactEmail}</small></span></a></div><p className="response-note"><span className="signal-dot" />{labels[locale].response}</p></div><ContactForm locale={locale} /></div></section>
     </SiteShell>
   );
 }

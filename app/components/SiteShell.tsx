@@ -4,19 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowUpRight,
-  AtSign,
   CalendarDays,
-  Check,
-  ChevronRight,
-  Cookie,
   Globe2,
-  Mail,
   Menu,
-  MessageCircle,
-  SlidersHorizontal,
   X,
 } from "lucide-react";
+import { siInstagram, siWhatsapp } from "simple-icons/icons";
+import { BrandIcon } from "./BrandIcon";
 import { getConsent, trackEvent } from "../lib/analytics";
 import {
   bookingUrl,
@@ -86,9 +80,6 @@ function ConsentManager({ locale }: { locale: Locale }) {
   const es = locale === "es";
   return (
     <section className="consent" aria-label={es ? "Preferencias de privacidad" : "Privacy preferences"}>
-      <div className="consent-icon" aria-hidden="true">
-        <Cookie size={20} />
-      </div>
       <div className="consent-copy">
         <strong>{es ? "Tu privacidad, bajo tu control" : "Your privacy, under your control"}</strong>
         <p>
@@ -135,7 +126,6 @@ function ConsentManager({ locale }: { locale: Locale }) {
       <div className="consent-actions">
         {!expanded && (
           <button className="button button-ghost button-sm" onClick={() => setExpanded(true)}>
-            <SlidersHorizontal size={16} />
             {es ? "Configurar" : "Customize"}
           </button>
         )}
@@ -146,7 +136,6 @@ function ConsentManager({ locale }: { locale: Locale }) {
           className="button button-primary button-sm"
           onClick={() => save(expanded ? consent : { analytics: true, marketing: true })}
         >
-          <Check size={16} />
           {expanded ? (es ? "Guardar" : "Save") : es ? "Aceptar" : "Accept"}
         </button>
       </div>
@@ -294,7 +283,6 @@ export function SiteShell({
               {nav.map((item) => (
                 <Link key={item.key} href={item.href} onClick={() => setMenuOpen(false)}>
                   {item.label}
-                  <ChevronRight size={18} />
                 </Link>
               ))}
               <a className="button button-primary" href={bookingHref}>
@@ -332,18 +320,18 @@ export function SiteShell({
           <div>
             <strong>{locale === "es" ? "Contacto" : "Contact"}</strong>
             <div className="footer-links">
-              <a href={`mailto:${contactEmail}`}><Mail size={15} />{contactEmail}</a>
+              <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
               <a
                 href={whatsappHref(locale)}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => trackEvent("whatsapp_click", { placement: "footer" })}
               >
-                <MessageCircle size={15} />WhatsApp
+                <BrandIcon icon={siWhatsapp} size={15} />WhatsApp
               </a>
               {instagramUrl && (
                 <a href={instagramUrl} target="_blank" rel="noreferrer" onClick={() => trackEvent("instagram_click")}>
-                  <AtSign size={15} />Instagram
+                  <BrandIcon icon={siInstagram} size={15} />Instagram
                 </a>
               )}
             </div>
@@ -363,7 +351,7 @@ export function SiteShell({
         <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} DreamWeb Chile.</span>
           <Link href={paths[otherLocale][pageKey] || paths[otherLocale].home}>
-            <Globe2 size={14} /> {otherLocale.toUpperCase()}
+            {otherLocale.toUpperCase()}
           </Link>
         </div>
       </footer>
@@ -376,9 +364,8 @@ export function SiteShell({
         aria-label={copy.whatsapp}
         onClick={() => trackEvent("whatsapp_click", { placement: "floating" })}
       >
-        <MessageCircle size={22} />
+        <BrandIcon icon={siWhatsapp} size={22} color="#ffffff" />
         <span>{copy.whatsapp}</span>
-        <ArrowUpRight size={15} />
       </a>
       <AnalyticsLoader />
       <ConsentManager locale={locale} />
